@@ -1,4 +1,4 @@
-# GK Pokedex
+# [gk-pokedex.netlify.app](https://gk-pokedex.netlify.app/)
 
 포켓몬 API를 활용한 포켓몬 검색이 가능한 도감
 
