@@ -13,7 +13,7 @@ div {
 #title {
   background-color: #ff2e0a;
   color: #fff;
-  padding: 8px;
+  padding: 8px 8%;
   font-family: "Wolyeonggyo";
   font-size: 1.5em;
 }
@@ -29,22 +29,18 @@ div {
   border: 1px solid #dee2e6;
   background-color: #f8f9fa;
   padding: 0.5rem;
-  height: 200px;
   margin: 0;
 }
 
-.pk-image {
-  background-color: red;
-  color: white;
+.pokemon-image {
   width: 100%;
-  height: 75%;
-  text-align: center;
+  background-color: #fff;
+  border: 1px solid black;
 }
 
-.pk-name {
-  background-color: blue;
-  color: white;
-  height: 25%;
+.pokemon-text {
+  font-size: 1.5rem;
+  margin-bottom: 0;
   text-align: center;
 }
 
