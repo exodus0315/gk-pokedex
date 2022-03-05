@@ -14,10 +14,35 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div id="title">GK Pokedex</div>
+    <div id="title">
+      <p class="h3">GK Pokedex</p>
+      <div id="search-box">
+        <input
+          id="search-input"
+          class="form-control"
+          placeholder="Pokemon name or number"
+          type="text"
+          onfocus="this.value=''"
+          onKeypress="javascript:if(event.keyCode==13){search()}"
+        />
+        <button type="button" class="btn btn-light">🔍</button>
+      </div>
+    </div>
     <div class="container">
-      <div id="search-box">Search box</div>
-      <section id="pokedex"></section>
+      <div class="modal hidden">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+          <p>
+            내용을 입력하지 않으셨습니다.<br />
+            정확한 내용을 입력해주세요.
+          </p>
+          <button id="modal-close-button">Close</button>
+        </div>
+      </div>
+
+      <section>
+        <div id="pokedex" class="row"></div>
+      </section>
       <div id="pagination">pagination</div>
     </div>
     <script
