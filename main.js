@@ -1,4 +1,4 @@
-let url = "";
+let page = "1";
 const searchInput = document.getElementById("search-input");
 const searchInput2 = document.getElementById("search-input-2");
 let searchValue = "";
@@ -100,17 +100,45 @@ function search() {
   }
 }
 
-const pokemonHome = () => {
+const findPokemonGroup = (pageNumber) => {
+  searchInput.value = "";
+  const url = `https://pokeapi.co/api/v2/pokemon/?limit=20&offset=${pageNumber}`;
+  fetch(url)
+    .then((response) => {
+      if (response.status == 200) {
+        return response.json();
+      } else {
+        throw new Error("데이터 불러오기에 실패하였습니다.");
+      }
+    })
+    .then((data) => data.results)
+    .then((result) => {
+      let pokemonList = [];
+      for (i = 0; i <= 19; i++) {
+        pokemonList.push(result[i].url);
+      }
+      findPokemon(pokemonList);
+    })
+    .catch((error) => console.log(error));
+};
+
+const findPokemon = (pokemonList) => {
   searchInput.value = "";
   const promises = [];
-
-  const url = `https://pokeapi.co/api/v2/pokemon/?limit=20&offset=20`;
-  promises.push(fetch(url).then((res) => res.json()));
-
+  for (let i = 0; i <= 19; i++) {
+    const resultUrl = pokemonList[i];
+    promises.push(fetch(resultUrl).then((res) => res.json()));
+  }
   Promise.all(promises).then((results) => {
-    const pokemon = results.map((result) => results[0].results);
-    console.log(pokemon[0][1]);
-    // displayPokemon(pokemon);
+    const pokemon = results.map((result) => ({
+      name: result.name,
+      image: result.sprites["front_default"],
+      type: result.types[0].type.name,
+      id: result.id,
+      height: result.height,
+      weight: result.weight,
+    }));
+    displayPokemon(pokemon);
   });
 };
 
@@ -136,17 +164,52 @@ const displayPokemon = (pokemon) => {
 };
 
 const pagination = () => {
-  paginationHTML = `<li class="page-item">
-  <a class="page-link" href="#" onclick="moveToPage(1)">
+  let paginationHTML = ``;
+  let totalCount = 898;
+  let totalPage = Math.ceil(totalCount / 20);
+  let pageGroup = Math.ceil(page / 5);
+  console.log(totalPage);
+  console.log(pageGroup);
+  let last = pageGroup * 5;
+  if (last > totalPage) {
+    last = totalPage;
+  }
+  let first = last - 4 <= 0 ? 1 : last - 4;
+
+  if (pageGroup != 1) {
+    paginationHTML = `<li class="page-item">
+  <a class="page-link" href="#" onclick="findPokemonGroup(${1})">
     <span aria-hidden="true">&lt;&lt;</span>
   </a>
 </li><li class="page-item">
-<a class="page-link" href="#" onclick="moveToPage(1)">
+<a class="page-link" href="#" onclick="findPokemonGroup(${page - 1})">
   <span aria-hidden="true">&lt;</span>
 </a>
 </li>`;
+  }
+
+  for (let i = first; i <= last; i++) {
+    paginationHTML += `<li class="page-item ${
+      page == i ? "active" : ""
+    }"><a class="page-link" href="#" onclick="findPokemonGroup(${i})">${i}</a></li>`;
+  }
+  if (last < totalPage) {
+    paginationHTML += `<li class="page-item">
+  <a class="page-link" href="#" onclick="findPokemonGroup(${page + 1})">
+    <span aria-hidden="true">&gt;</span>
+  </a>
+</li><li class="page-item">
+<a class="page-link" href="#" onclick="findPokemonGroup(${totalPage})">
+  <span aria-hidden="true">&gt;&gt;</span>
+</a>
+</li>`;
+  }
 
   document.querySelector(".pagination").innerHTML = paginationHTML;
+};
+
+const pokemonHome = (pageNumber) => {
+  findPokemonGroup(pageNumber);
 };
 
 // 첫 글자만 대문자로 변환

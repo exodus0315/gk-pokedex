@@ -148,6 +148,11 @@ div {
   display: none;
 }
 
+.pagination {
+  padding: 2em 0 1em;
+  justify-content: center;
+}
+
 @media (max-width: 768px) {
   #search-box input {
     display: none;
