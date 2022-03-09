@@ -39,16 +39,15 @@ function search() {
         }
       })
       .then((pokemon) => {
-        console.log(pokemon);
         let pokemonHTML = "";
         pokemonHTML += `
         <div class="col-lg-12">
         <p class="h1">${pokemon.id}. ${upperCase(pokemon.name)}</p>
         <hr id="search-line" />
       </div>
-      <div class="col-lg-4">
+      <div class="col-lg-4 imgAlign">
         <img src="${pokemon.sprites["front_default"]}" class="img-fluid"
-        alt="${pokemon.name}" />
+        alt="${pokemon.name} image" />
       </div>
       <div class="col-lg-4">
         <p class="h5">기본정보 (Basic Information)</p>
@@ -66,21 +65,21 @@ function search() {
         <p>스피드: ${pokemon.stats[5].base_stat}</p>
       </div>
       <div class="row gx-2">
-        <div class="col">
+        <div class="col-lg-4">
           <div class="p-3 border bg-light">
             <img src="${pokemon.sprites["back_default"]}" class="img-fluid" />
             <hr />
             <p class="h4">뒷 모습</p>
           </div>
         </div>
-        <div class="col">
+        <div class="col-lg-4">
           <div class="p-3 border bg-light">
             <img src="${pokemon.sprites["front_shiny"]}" class="img-fluid" />
             <hr />
             <p class="h4">샤이니 앞 모습</p>
           </div>
         </div>
-        <div class="col">
+        <div class="col-lg-4">
           <div class="p-3 border bg-light">
             <img src="${pokemon.sprites["back_shiny"]}" class="img-fluid" />
             <hr />
@@ -90,10 +89,10 @@ function search() {
       </div>
         `;
         document.getElementById("pokedex").innerHTML = pokemonHTML;
-        document.getElementById("pagination").innerHTML = "";
+        document.querySelector("nav").innerHTML = "";
       })
       .catch((error) => {
-        console.log(error);
+        console.log("error", error);
       });
   } else {
     displayModal();
@@ -102,7 +101,14 @@ function search() {
 
 const findPokemonGroup = (pageNumber) => {
   searchInput.value = "";
-  const url = `https://pokeapi.co/api/v2/pokemon/?limit=20&offset=${pageNumber}`;
+  page = pageNumber;
+  let findOffset = 0;
+  if (page == 0) {
+    findOffset = 0;
+  } else {
+    findOffset = (page - 1) * 20;
+  }
+  const url = `https://pokeapi.co/api/v2/pokemon/?limit=20&offset=${findOffset}`;
   fetch(url)
     .then((response) => {
       if (response.status == 200) {
@@ -119,7 +125,7 @@ const findPokemonGroup = (pageNumber) => {
       }
       findPokemon(pokemonList);
     })
-    .catch((error) => console.log(error));
+    .catch((error) => console.log("error", error));
 };
 
 const findPokemon = (pokemonList) => {
@@ -168,14 +174,11 @@ const pagination = () => {
   let totalCount = 898;
   let totalPage = Math.ceil(totalCount / 20);
   let pageGroup = Math.ceil(page / 5);
-  console.log(totalPage);
-  console.log(pageGroup);
   let last = pageGroup * 5;
   if (last > totalPage) {
     last = totalPage;
   }
   let first = last - 4 <= 0 ? 1 : last - 4;
-
   if (pageGroup != 1) {
     paginationHTML = `<li class="page-item">
   <a class="page-link" href="#" onclick="findPokemonGroup(${1})">
@@ -221,4 +224,4 @@ function displayModal() {
   modal.classList.toggle("hidden");
 }
 
-pokemonHome();
+pokemonHome(1);

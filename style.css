@@ -6,6 +6,15 @@
   font-style: normal;
 }
 
+body {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
 div {
   word-break: break-all; /* 글씨가 div를 벗어나지 않도록 해줌 */
 }
@@ -48,6 +57,10 @@ div {
 }
 
 .p-3 {
+  text-align: center;
+}
+
+.imgAlign {
   text-align: center;
 }
 
